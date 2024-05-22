@@ -1,43 +1,49 @@
 using System.Text;
+
 using Contracts.Domains.Interfaces;
-using Microsoft.AspNetCore.Identity;
+
 using Infrastructure.Common;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
 using MySqlConnector;
+
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+
 using Product.API.Persistence;
 using Product.API.Repositories;
 using Product.API.Repositories.Interfaces;
+
 using Shared.Configurations;
 
 namespace Product.API.Extensions;
 
 public static class ServiceExtensions
 {
-    internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services, 
+    internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services,
         IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection(nameof(JwtSettings))
             .Get<JwtSettings>();
         services.AddSingleton(jwtSettings);
-        
+
         var databaseSettings = configuration.GetSection(nameof(DatabaseSettings))
             .Get<DatabaseSettings>();
         services.AddSingleton(databaseSettings);
-        
+
         var apiConfiguration = configuration.GetSection(nameof(ApiConfiguration))
             .Get<ApiConfiguration>();
         services.AddSingleton(apiConfiguration);
 
         return services;
     }
-    
+
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddControllers();
@@ -54,7 +60,7 @@ public static class ServiceExtensions
         services.ConfigureHealthChecks();
         return services;
     }
-    
+
     internal static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
     {
         var settings = services.GetOptions<JwtSettings>(nameof(JwtSettings));
@@ -92,9 +98,9 @@ public static class ServiceExtensions
         var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>();
         if (databaseSettings == null || string.IsNullOrEmpty(databaseSettings.ConnectionString))
             throw new ArgumentNullException("Connection string is not configured.");
-        
+
         var builder = new MySqlConnectionStringBuilder(databaseSettings.ConnectionString);
-        services.AddDbContext<ProductContext>(m => m.UseMySql(builder.ConnectionString, 
+        services.AddDbContext<ProductContext>(m => m.UseMySql(builder.ConnectionString,
             ServerVersion.AutoDetect(builder.ConnectionString), e =>
         {
             e.MigrationsAssembly("Product.API");
@@ -164,12 +170,12 @@ public static class ServiceExtensions
                         },
                         new List<string>
                         {
-                            "tedu_microservices_api.read", 
+                            "tedu_microservices_api.read",
                             "tedu_microservices_api.write"
                         }
                     }
                 });
             });
-        
+
     }
 }
