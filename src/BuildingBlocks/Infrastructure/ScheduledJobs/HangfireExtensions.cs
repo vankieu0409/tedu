@@ -65,8 +65,8 @@ public static class HangfireExtensions
                     config.UseSimpleAssemblyNameTypeSerializer()
                         .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                         .UseRecommendedSerializerSettings()
-                        .UseMongoStorage(mongoClient, mongoUrlBuilder.DatabaseName, mongoStorageOptions)
-                        .UseConsole();
+                        .UseMongoStorage(mongoClient, mongoUrlBuilder.DatabaseName, mongoStorageOptions);
+                        //.UseConsole();
 
                     var jsonSettings = new JsonSerializerSettings
                     {

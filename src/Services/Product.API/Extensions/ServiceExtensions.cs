@@ -1,25 +1,18 @@
 using System.Text;
-
 using Contracts.Domains.Interfaces;
-
 using Infrastructure.Common;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
 using MySqlConnector;
-
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-
 using Product.API.Persistence;
 using Product.API.Repositories;
 using Product.API.Repositories.Interfaces;
-
 using Shared.Configurations;
 
 namespace Product.API.Extensions;
@@ -122,7 +115,7 @@ public static class ServiceExtensions
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
         services.AddHealthChecks()
-            .AddMySql(databaseSettings.ConnectionString, "MySql Health", HealthStatus.Degraded);
+            .AddMySql(databaseSettings.ConnectionString,null, null,"MySql Health", HealthStatus.Degraded);
     }
 
     public static void ConfigureSwagger(this IServiceCollection services)
