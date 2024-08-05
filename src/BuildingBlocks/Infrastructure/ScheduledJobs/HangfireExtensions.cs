@@ -1,20 +1,9 @@
-using System.Security.Authentication;
-
 using Hangfire;
-using Hangfire.Console;
-using Hangfire.Console.Extensions;
-using Hangfire.Mongo;
-using Hangfire.Mongo.Migration.Strategies;
-using Hangfire.Mongo.Migration.Strategies.Backup;
 using Hangfire.PostgreSql;
 
 using Infrastructure.Extensions;
 
 using Microsoft.Extensions.DependencyInjection;
-
-using MongoDB.Driver;
-
-using Newtonsoft.Json;
 
 using Shared.Configurations;
 
@@ -46,43 +35,44 @@ public static class HangfireExtensions
         switch (settings.Storage.DBProvider.ToLower())
         {
             case "mongodb":
-                var mongoUrlBuilder = new MongoUrlBuilder(settings.Storage.ConnectionString);
+                //var mongoUrlBuilder = new MongoUrlBuilder(settings.Storage.ConnectionString);
 
-                var mongoClientSettings = MongoClientSettings.FromUrl(
-                    new MongoUrl(settings.Storage.ConnectionString));
-                mongoClientSettings.SslSettings = new SslSettings
-                {
-                    EnabledSslProtocols = SslProtocols.Tls12
-                };
-                var mongoClient = new MongoClient(mongoClientSettings);
+                //var mongoClientSettings = MongoClientSettings.FromUrl(
+                //    new MongoUrl(settings.Storage.ConnectionString));
+                //mongoClientSettings.SslSettings = new SslSettings
+                //{
+                //    EnabledSslProtocols = SslProtocols.Tls12
+                //};
+                //var mongoClient = new MongoClient(mongoClientSettings);
 
 
-                var migrationOptions = new MongoMigrationOptions
-                {
-                    MigrationStrategy = new MigrateMongoMigrationStrategy(),
-                    BackupStrategy = new CollectionMongoBackupStrategy()
-                };
-                services.AddHangfire((provider, config) =>
-                {
-                    config.UseSimpleAssemblyNameTypeSerializer()
-                        .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                        .UseRecommendedSerializerSettings()
-                        .UseMongoStorage(mongoClient, mongoUrlBuilder.DatabaseName, new MongoStorageOptions
-                        {
-                            MigrationOptions = migrationOptions,
-                            CheckConnection = true,
-                            Prefix = "SchedulerQueue",
-                            CheckQueuedJobsStrategy = CheckQueuedJobsStrategy.TailNotificationsCollection
-                        }).UseConsole(new ConsoleOptions());
+                //var migrationOptions = new MongoMigrationOptions
+                //{
+                //    MigrationStrategy = new MigrateMongoMigrationStrategy(),
+                //    BackupStrategy = new CollectionMongoBackupStrategy()
+                //};
+                //services.AddHangfire((provider, config) =>
+                //{
+                //    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                //        .UseSimpleAssemblyNameTypeSerializer()
+                //        .UseRecommendedSerializerSettings()
+                //        .UseConsole(new ConsoleOptions())
+                //        .UseMongoStorage(mongoClient, mongoUrlBuilder.DatabaseName, new MongoStorageOptions
+                //        {
+                //            MigrationOptions = migrationOptions,
+                //            CheckConnection = true,
+                //            Prefix = "SchedulerQueue",
+                //            CheckQueuedJobsStrategy = CheckQueuedJobsStrategy.TailNotificationsCollection
+                //        });
 
-                    var jsonSettings = new JsonSerializerSettings
-                    {
-                        TypeNameHandling = TypeNameHandling.All
-                    };
-                    config.UseSerializerSettings(jsonSettings);
-                });
-                services.AddHangfireServer();
-                services.AddHangfireConsoleExtensions();
+                //    var jsonSettings = new JsonSerializerSettings
+                //    {
+                //        TypeNameHandling = TypeNameHandling.All
+                //    };
+                //    config.UseSerializerSettings(jsonSettings);
+                //});
+                //services.AddHangfireServer();
+                //services.AddHangfireConsoleExtensions();
                 break;
             case "postgresql":
                 services.AddHangfire(x =>
@@ -95,7 +85,6 @@ public static class HangfireExtensions
             default:
                 throw new Exception($"HangFire Storage Provider {settings.Storage.DBProvider} is not supported.");
         }
-
         return services;
     }
 }
