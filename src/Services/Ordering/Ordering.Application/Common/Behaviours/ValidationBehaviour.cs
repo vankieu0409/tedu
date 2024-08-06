@@ -1,5 +1,7 @@
-using MediatR;
 using FluentValidation;
+
+using MediatR;
+
 using ValidationException = Infrastructure.Exceptions.ValidationException;
 
 namespace Ordering.Application.Common.Behaviours;
@@ -8,16 +10,19 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
     where TRequest : IRequest<TResponse>
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
+    private IPipelineBehavior<TRequest, TResponse> _pipelineBehaviorImplementation;
 
     public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
     {
         _validators = validators;
     }
-    
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+
+
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
+
         if (!_validators.Any()) return await next();
-        
+
         var context = new ValidationContext<TRequest>(request);
 
         var validationResults = await Task.WhenAll(

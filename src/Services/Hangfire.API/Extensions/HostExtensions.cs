@@ -1,5 +1,7 @@
 using Common.Logging;
+
 using Serilog;
+
 using Shared.Configurations;
 
 namespace Hangfire.API.Extensions;
@@ -22,10 +24,10 @@ public static class HostExtensions
         var configDashboard = configuration.GetSection("HangFireSettings:Dashboard").Get<DashboardOptions>();
         var hangfireSettings = configuration.GetSection("HangFireSettings").Get<HangFireSettings>();
         var hangfireRoute = hangfireSettings.Route;
-
+        app.UseHangfireServer();
         app.UseHangfireDashboard(hangfireRoute, new DashboardOptions
         {
-            Authorization = new [] { new AuthorizationFilter() },
+            Authorization = new[] { new AuthorizationFilter() },
             DashboardTitle = configDashboard.DashboardTitle,
             StatsPollingInterval = configDashboard.StatsPollingInterval,
             AppPath = configDashboard.AppPath,
