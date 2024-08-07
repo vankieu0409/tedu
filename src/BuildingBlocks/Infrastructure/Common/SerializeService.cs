@@ -1,5 +1,4 @@
 using Contracts.Common.Interfaces;
-
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -27,7 +26,6 @@ public class SerializeService : ISerializeService
 
     public string Serialize<T>(T obj, Type type)
     {
-
         return JsonConvert.SerializeObject(obj, type, new JsonSerializerSettings());
     }
 
