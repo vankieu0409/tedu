@@ -1,8 +1,12 @@
 using Basket.API;
 using Basket.API.Extensions;
+
 using HealthChecks.UI.Client;
+
 using Infrastructure.Middlewares;
+
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,9 +23,9 @@ try
     builder.Services.ConfigureHttpClientService();
     builder.Services.ConfigureRedis();
     builder.Services.ConfigureGrpcService();
-    builder.Services.Configure<RouteOptions>(options 
+    builder.Services.Configure<RouteOptions>(options
         => options.LowercaseUrls = true);
-    
+
     // configure Mass Transit
     builder.Services.ConfigureMassTransit();
 
@@ -32,7 +36,7 @@ try
     builder.Services.ConfigureHealthChecks();
 
     var app = builder.Build();
-    
+
     // Configure the HTTP request pipeline.
     //if (app.Environment.IsDevelopment())
     //{
