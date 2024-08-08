@@ -1,9 +1,13 @@
 using Infrastructure.Configurations;
 using Infrastructure.Extensions;
+
 using MassTransit;
+
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+
 using Ordering.API.Application.IntegrationEvents.EventsHandler;
+
 using Shared.Configurations;
 
 namespace Ordering.API.Extensions;
@@ -16,7 +20,7 @@ public static class ServiceExtensions
         var emailSettings = configuration.GetSection(nameof(SMTPEmailSetting))
             .Get<SMTPEmailSetting>();
         services.AddSingleton(emailSettings);
-        
+
         var databaseSettings = configuration.GetSection(nameof(DatabaseSettings))
             .Get<DatabaseSettings>();
         services.AddSingleton(databaseSettings);
@@ -33,7 +37,7 @@ public static class ServiceExtensions
         var settings = services.GetOptions<EventBusSettings>("EventBusSettings");
         if (settings == null || string.IsNullOrEmpty(settings.HostAddress))
             throw new ArgumentNullException("EventBusSetting is not configured");
-        
+
         var mqConnection = new Uri(settings.HostAddress);
         services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
         services.AddMassTransit(config =>
@@ -42,16 +46,16 @@ public static class ServiceExtensions
             config.UsingRabbitMq((ctx, cfg) =>
             {
                 cfg.Host(mqConnection);
-                // cfg.ReceiveEndpoint("basket-checkout-queue", c =>
-                // {
-                //     c.ConfigureConsumer<BasketCheckoutEventHandler>(ctx);
-                // });
-                
+                //cfg.ReceiveEndpoint("basket-checkout-queue", c =>
+                //{
+                //    c.ConfigureConsumer<BasketCheckoutEventHandler>(ctx);
+                //});
+
                 cfg.ConfigureEndpoints(ctx);
             });
         });
     }
-    
+
     public static void ConfigureHealthChecks(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));

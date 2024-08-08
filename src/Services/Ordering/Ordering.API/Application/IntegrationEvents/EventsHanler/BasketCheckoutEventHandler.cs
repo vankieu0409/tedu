@@ -1,8 +1,13 @@
 using AutoMapper;
+
 using EventBus.Messages.IntegrationEvents.Events;
+
 using MassTransit;
+
 using MediatR;
+
 using Ordering.Application.Features.V1.Orders;
+
 using ILogger = Serilog.ILogger;
 
 namespace Ordering.API.Application.IntegrationEvents.EventsHandler;
