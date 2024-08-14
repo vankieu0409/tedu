@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 
@@ -22,7 +23,7 @@ public static class Serilogger
                     "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
                 {
-                    IndexFormat = $"tedulogs-{applicationName}-{environmentName}-{DateTime.UtcNow:yyyy-MM}",
+                    IndexFormat = $"tedulogs-{applicationName}-{environmentName} - {DateTime.UtcNow:dd-MM-yyyy}",
                     AutoRegisterTemplate = true,
                     NumberOfReplicas = 1,
                     NumberOfShards = 2,

@@ -1,8 +1,12 @@
 using AutoMapper;
+
 using MediatR;
+
 using Ordering.Application.Common.Interfaces;
 using Ordering.Domain.Entities;
+
 using Serilog;
+
 using Shared.SeedWork;
 
 namespace Ordering.Application.Features.V1.Orders;
@@ -31,7 +35,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Api
         _orderRepository.CreateOrder(orderEntity);
         orderEntity.AddedOrder();
         await _orderRepository.SaveChangesAsync();
-        
+
         _logger.Information($"Order {orderEntity.Id} - Document No: {orderEntity.DocumentNo} was successfully created.");
 
         _logger.Information($"END: {MethodName} - Username: {request.UserName}");

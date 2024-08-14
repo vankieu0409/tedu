@@ -17,10 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Protos" />
-    </ItemGroup>
-
-    <ItemGroup>
         <None Remove="Protos\stock.proto" />
         <Protobuf Include="Protos\stock.proto">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

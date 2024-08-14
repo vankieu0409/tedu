@@ -1,11 +1,15 @@
 using AutoMapper;
+
 using Infrastructure.Common;
 using Infrastructure.Extensions;
+
 using Inventory.Product.API.Entities;
 using Inventory.Product.API.Extensions;
 using Inventory.Product.API.Services.Interfaces;
+
 using MongoDB.Bson;
 using MongoDB.Driver;
+
 using Shared.Configurations;
 using Shared.DTOs.Inventory;
 
@@ -26,7 +30,7 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
             .Find(x => x.ItemNo.Equals(itemNo))
             .ToListAsync();
         var result = _mapper.Map<IEnumerable<InventoryEntryDto>>(entities);
-        
+
         return result;
     }
 
@@ -37,9 +41,9 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
         if (!string.IsNullOrEmpty(query.SearchTerm))
             filterSearchTerm = Builders<InventoryEntry>.Filter.Eq(s => s.DocumentNo, query.SearchTerm);
 
-        var andFilter = filterItemNo & filterSearchTerm; 
-       
-        var pagedList = await Collection.PaginatedListAsync(andFilter, pageIndex: query.PageIndex, pageNumber: query.PageSize);        
+        var andFilter = filterItemNo & filterSearchTerm;
+
+        var pagedList = await Collection.PaginatedListAsync(andFilter, pageIndex: query.PageIndex, pageNumber: query.PageSize);
         var items = _mapper.Map<IEnumerable<InventoryEntryDto>>(pagedList);
         var result = new PagedList<InventoryEntryDto>(items, pagedList.GetMetaData().TotalItems, query.PageIndex,
             query.PageSize);
@@ -65,7 +69,7 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
         };
         await CreateAsync(itemToAdd);
         var result = _mapper.Map<InventoryEntryDto>(itemToAdd);
-        
+
         return result;
     }
 
@@ -80,7 +84,7 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
         };
         await CreateAsync(itemToAdd);
         var result = _mapper.Map<InventoryEntryDto>(itemToAdd);
-        
+
         return result;
     }
 

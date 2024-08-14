@@ -1,4 +1,4 @@
-version: '3.8'
+
 
 services:
   #database section
@@ -38,7 +38,7 @@ services:
       - POSTGRES_DB=CustomerDb
     restart: always
     ports:
-      - "5433:5432"
+      - ":5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     
@@ -107,7 +107,7 @@ services:
       - xpack.security.enabled=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.type=single-node
-#      - ELASTIC_USERNAME=elastic #default username
+      - ELASTIC_USERNAME=elastic #default username
       - ELASTIC_PASSWORD=admin
     ports:
       - "9200:9200"
@@ -130,7 +130,7 @@ services:
       timeout: 10s
       retries: 5
       
-  #microservices api sections
+  # microservices api sections
   # product.api:
   #   container_name: product.api
   #   environment:

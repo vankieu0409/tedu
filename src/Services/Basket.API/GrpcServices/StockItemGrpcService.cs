@@ -1,6 +1,9 @@
+
 using Grpc.Core;
+
 using Polly;
 using Polly.Retry;
+
 using ILogger = Serilog.ILogger;
 
 namespace Basket.API.GrpcServices;
@@ -20,7 +23,7 @@ public class StockItemGrpcService
         _retryPolicy = Policy<StockModel>.Handle<RpcException>()
             .RetryAsync(3);
     }
-    
+
     public async Task<StockModel> GetStock(string itemNo)
     {
         try
@@ -30,7 +33,7 @@ public class StockItemGrpcService
 
             return await _retryPolicy.ExecuteAsync(async () =>
             {
-                var result =  await _stockProtoService.GetStockAsync(stockItemRequest);
+                var result = await _stockProtoService.GetStockAsync(stockItemRequest);
                 if (result != null)
                     _logger.Information($"END: Get Stock StockItemGrpcService Item No: {itemNo} - Stock value: {result.Quantity}");
 

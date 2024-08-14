@@ -1,25 +1,30 @@
 using Grpc.HealthCheck;
+
 using Infrastructure.Extensions;
+
 using Inventory.Grpc.Repositories;
 using Inventory.Grpc.Repositories.Interfaces;
+
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+
 using MongoDB.Driver;
+
 using Shared.Configurations;
 
 namespace Inventory.Grpc.Extensions;
 
 public static class ServiceExtensions
 {
-    internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services, 
+    internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services,
         IConfiguration configuration)
     {
         var databaseSettings = configuration.GetSection(nameof(MongoDbSettings))
             .Get<MongoDbSettings>();
         services.AddSingleton(databaseSettings);
-        
+
         return services;
     }
-    
+
     private static string getMongoConnectionString(this IServiceCollection services)
     {
         var settings = services.GetOptions<MongoDbSettings>(nameof(MongoDbSettings));
@@ -27,8 +32,7 @@ public static class ServiceExtensions
             throw new ArgumentNullException("DatabaseSettings is not configured");
 
         var databaseName = settings.DatabaseName;
-        var mongodbConnectionString = settings.ConnectionString + "/" + databaseName +
-                                      "?authSource=admin";
+        var mongodbConnectionString = settings.ConnectionString + "/" + databaseName + "?authSource=admin";
         return mongodbConnectionString;
     }
 
