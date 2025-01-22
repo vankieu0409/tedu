@@ -53,8 +53,9 @@ public static class ServiceExtensions
         var databaseSettings = services.GetOptions<MongoDbSettings>(nameof(MongoDbSettings));
         services.AddSingleton<HealthServiceImpl>();
         services.AddHostedService<StatusService>();
+        IMongoClient a = new MongoClient();
         services.AddHealthChecks()
-            .AddMongoDb(databaseSettings.ConnectionString,
+            .AddMongoDb(c => a.GetDatabase(databaseSettings.ConnectionString),
                 name: "Inventory MongoDb Health",
                 failureStatus: HealthStatus.Degraded)
             .AddCheck("Inventory Grpc Health", () => HealthCheckResult.Healthy());

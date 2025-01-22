@@ -1,26 +1,30 @@
 using System.Text;
+
 using Contracts.Identity;
-using IdentityServer4.AccessTokenValidation;
+
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Provider.Polly;
+
 using Shared.Configurations;
 
 namespace OcelotApiGw.Extensions;
 
 public static class ServiceExtensions
 {
-    internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services, 
+    internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services,
         IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection(nameof(JwtSettings))
             .Get<JwtSettings>();
         services.AddSingleton(jwtSettings);
-        
+
         var apiConfiguration = configuration.GetSection(nameof(ApiConfiguration))
             .Get<ApiConfiguration>();
         services.AddSingleton(apiConfiguration);
@@ -39,7 +43,7 @@ public static class ServiceExtensions
             x.GenerateDocsForGatewayItSelf = false;
         });
     }
-    
+
     internal static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
     {
         var settings = services.GetOptions<JwtSettings>(nameof(JwtSettings));

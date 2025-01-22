@@ -1,5 +1,7 @@
 using Common.Logging;
+
 using Microsoft.EntityFrameworkCore;
+
 using Serilog;
 
 namespace Product.API.Extensions;
@@ -16,7 +18,7 @@ public static class HostExtensions
                 .AddEnvironmentVariables();
         }).UseSerilog(Serilogger.Configure);
     }
-    
+
     public static IHost MigrateDatabase<TContext>(this IHost host, Action<TContext, IServiceProvider> seeder)
     where TContext : DbContext
     {
@@ -25,7 +27,7 @@ public static class HostExtensions
             var services = scope.ServiceProvider;
             var logger = services.GetRequiredService<ILogger<TContext>>();
             var context = services.GetService<TContext>();
-            
+
             try
             {
                 logger.LogInformation("Migrating mysql database.");

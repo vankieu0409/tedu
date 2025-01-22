@@ -1,24 +1,28 @@
 using Infrastructure.Extensions;
+
 using Inventory.Product.API.Services;
 using Inventory.Product.API.Services.Interfaces;
+
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+
 using MongoDB.Driver;
+
 using Shared.Configurations;
 
 namespace Inventory.Product.API.Extensions;
 
 public static class ServiceExtensions
 {
-    internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services, 
+    internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services,
         IConfiguration configuration)
     {
         var databaseSettings = configuration.GetSection(nameof(MongoDbSettings))
             .Get<MongoDbSettings>();
         services.AddSingleton(databaseSettings);
-        
+
         return services;
     }
-    
+
     private static string getMongoConnectionString(this IServiceCollection services)
     {
         var settings = services.GetOptions<MongoDbSettings>(nameof(MongoDbSettings));
@@ -43,12 +47,13 @@ public static class ServiceExtensions
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
         services.AddScoped<IInventoryService, InventoryService>();
     }
-    
+
     public static void ConfigureHealthChecks(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<MongoDbSettings>(nameof(MongoDbSettings));
+        IMongoClient a = new MongoClient();
         services.AddHealthChecks()
-            .AddMongoDb(databaseSettings.ConnectionString,
+            .AddMongoDb(c => a.GetDatabase(databaseSettings.ConnectionString),
                 name: "Inventory MongoDb Health",
                 failureStatus: HealthStatus.Degraded);
     }

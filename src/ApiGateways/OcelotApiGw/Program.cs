@@ -1,7 +1,10 @@
 using Infrastructure.Identity;
 using Infrastructure.Middlewares;
+
 using Ocelot.Middleware;
+
 using OcelotApiGw.Extensions;
+
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -27,7 +30,7 @@ try
 
     var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+    // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
         // app.UseSwagger();
@@ -44,7 +47,7 @@ try
     // app.UseAuthorization();
     app.UseEndpoints(endpoints =>
     {
-        endpoints.MapGet("/",  context =>
+        endpoints.MapGet("/", context =>
         {
             // await context.Response.WriteAsync($"Hello TEDU members! This is {builder.Environment.ApplicationName}");
             context.Response.Redirect("swagger/index.html");
@@ -56,10 +59,11 @@ try
         opt =>
         {
             opt.PathToSwaggerGenerator = "/swagger/docs";
-            opt.OAuthClientId("tedu_microservices_swagger");
-            opt.DisplayRequestDuration();
+
+            //opt.OAuthClientId("tedu_microservices_swagger");
+            //opt.DisplayRequestDuration();
         });
-   
+
     await app.UseOcelot();
     app.Run();
 }
