@@ -14,7 +14,6 @@
 	  <PackageReference Include="FluentValidation" />
 	  <PackageReference Include="Hangfire.AspNetCore" />
 	  <PackageReference Include="Hangfire.Console" />
-	  <PackageReference Include="Hangfire.Console.Extensions" />
 	  <PackageReference Include="Hangfire.Mongo" />
 	  <PackageReference Include="Hangfire.PostgreSql" />
 	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />

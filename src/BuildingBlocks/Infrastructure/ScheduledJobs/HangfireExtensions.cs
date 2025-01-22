@@ -1,7 +1,6 @@
 using System.Security.Authentication;
 
 using Hangfire;
-using Hangfire.Console.Extensions;
 using Hangfire.Mongo;
 using Hangfire.Mongo.Migration.Strategies;
 using Hangfire.Mongo.Migration.Strategies.Backup;
@@ -80,7 +79,7 @@ public static class HangfireExtensions
                     };
                     config.UseSerializerSettings(jsonSettings);
                 });
-                services.AddHangfireConsoleExtensions();
+                //services.AddHangfireConsoleExtensions();
                 break;
             case "postgresql":
                 services.AddHangfire(x =>
